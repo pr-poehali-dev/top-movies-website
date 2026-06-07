@@ -18,7 +18,7 @@ export default function Index() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
   const [activeTrailer, setActiveTrailer] = useState<TrailerItem | null>(null);
-  const [trailerFilter, setTrailerFilter] = useState("Все");
+  const [trailerFilter, setTrailerFilter] = useState("2025–2026");
 
   const scrollToSection = (id: string) => {
     setActiveSection(id);

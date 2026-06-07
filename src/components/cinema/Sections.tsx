@@ -130,6 +130,14 @@ interface TrailersSectionProps {
 }
 
 export function TrailersSection({ trailerFilter, setTrailerFilter, activeTrailer, setActiveTrailer }: TrailersSectionProps) {
+  const filters = ["2025–2026", "Все", "Фильм", "Сериал"];
+
+  const filtered = TRAILERS.filter(t => {
+    if (trailerFilter === "Все") return true;
+    if (trailerFilter === "2025–2026") return t.year >= 2025;
+    return t.type === trailerFilter;
+  });
+
   return (
     <>
       <FilmStrip />
@@ -143,30 +151,49 @@ export function TrailersSection({ trailerFilter, setTrailerFilter, activeTrailer
                 <span style={{ color: "#D4AF37" }}>Трейлеры</span>
               </h2>
             </div>
-            <div style={{ display: "flex", gap: "8px" }}>
-              {["Все", "Фильм", "Сериал"].map(filter => (
+            <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+              {filters.map(filter => (
                 <button
                   key={filter}
                   onClick={() => setTrailerFilter(filter)}
                   style={{
                     padding: "8px 18px", borderRadius: "8px", fontSize: "13px", cursor: "pointer", transition: "all 0.2s", border: "none",
-                    background: trailerFilter === filter ? "#D4AF37" : "rgba(255,255,255,0.06)",
-                    color: trailerFilter === filter ? "#000" : "rgba(255,255,255,0.6)",
-                    fontFamily: "'Golos Text', sans-serif", fontWeight: trailerFilter === filter ? "600" : "400",
+                    background: trailerFilter === filter
+                      ? (filter === "2025–2026" ? "#D4AF37" : "#D4AF37")
+                      : (filter === "2025–2026" ? "rgba(212,175,55,0.12)" : "rgba(255,255,255,0.06)"),
+                    color: trailerFilter === filter ? "#000" : (filter === "2025–2026" ? "#D4AF37" : "rgba(255,255,255,0.6)"),
+                    fontFamily: "'Golos Text', sans-serif",
+                    fontWeight: trailerFilter === filter ? "600" : "400",
+                    outline: filter === "2025–2026" && trailerFilter !== filter ? "1px solid rgba(212,175,55,0.3)" : "none",
                   }}
                 >
-                  {filter}
+                  {filter === "2025–2026" ? "🆕 2025–2026" : filter}
                 </button>
               ))}
             </div>
           </div>
 
+          {trailerFilter === "2025–2026" && (
+            <div className="animate-fade-in" style={{ marginBottom: "32px", padding: "16px 20px", borderRadius: "12px", background: "rgba(212,175,55,0.07)", border: "1px solid rgba(212,175,55,0.2)", display: "flex", alignItems: "center", gap: "12px" }}>
+              <Icon name="Sparkles" size={16} style={{ color: "#D4AF37", flexShrink: 0 }} />
+              <p style={{ color: "rgba(255,255,255,0.6)", fontSize: "13px", lineHeight: 1.5 }}>
+                Официальные трейлеры самых ожидаемых фильмов 2025–2026 года с YouTube
+              </p>
+            </div>
+          )}
+
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "20px" }}>
-            {TRAILERS.filter(t => trailerFilter === "Все" || t.type === trailerFilter).map((trailer, i) => (
+            {filtered.map((trailer, i) => (
               <div
                 key={trailer.id}
                 className="animate-fade-in"
-                style={{ animationDelay: `${i * 0.08}s`, cursor: "pointer", borderRadius: "14px", overflow: "hidden", background: "#0f0f0f", border: "1px solid rgba(255,255,255,0.07)", transition: "all 0.3s" }}
+                style={{
+                  animationDelay: `${i * 0.08}s`, cursor: "pointer", borderRadius: "14px", overflow: "hidden",
+                  background: "#0f0f0f",
+                  border: trailer.isNew ? "1px solid rgba(212,175,55,0.25)" : "1px solid rgba(255,255,255,0.07)",
+                  transition: "all 0.3s",
+                  boxShadow: trailer.isNew ? "0 0 20px rgba(212,175,55,0.05)" : "none",
+                }}
                 onClick={() => setActiveTrailer(trailer)}
               >
                 <div style={{ position: "relative", aspectRatio: "16/9", overflow: "hidden" }}>
@@ -186,8 +213,15 @@ export function TrailersSection({ trailerFilter, setTrailerFilter, activeTrailer
                   <div style={{ position: "absolute", bottom: "10px", right: "10px", background: "rgba(0,0,0,0.8)", borderRadius: "6px", padding: "3px 8px", backdropFilter: "blur(6px)" }}>
                     <span style={{ color: "#fff", fontSize: "12px", fontWeight: "600" }}>{trailer.duration}</span>
                   </div>
-                  <div style={{ position: "absolute", top: "10px", left: "10px", background: trailer.type === "Сериал" ? "rgba(41,128,185,0.9)" : "rgba(192,57,43,0.9)", borderRadius: "6px", padding: "3px 8px" }}>
-                    <span style={{ color: "#fff", fontSize: "11px", fontWeight: "600" }}>{trailer.type}</span>
+                  <div style={{ position: "absolute", top: "10px", left: "10px", display: "flex", gap: "6px" }}>
+                    <div style={{ background: trailer.type === "Сериал" ? "rgba(41,128,185,0.9)" : "rgba(192,57,43,0.9)", borderRadius: "6px", padding: "3px 8px" }}>
+                      <span style={{ color: "#fff", fontSize: "11px", fontWeight: "600" }}>{trailer.type}</span>
+                    </div>
+                    {trailer.isNew && (
+                      <div style={{ background: "#D4AF37", borderRadius: "6px", padding: "3px 8px" }}>
+                        <span style={{ color: "#000", fontSize: "11px", fontWeight: "700" }}>НОВИНКА</span>
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div style={{ padding: "16px" }}>

@@ -30,6 +30,7 @@ export interface TrailerItem {
   duration: string;
   type: string;
   description: string;
+  isNew?: boolean;
 }
 
 export const FILMS: FilmItem[] = [
@@ -67,7 +68,54 @@ export const NAV_ITEMS = [
   { id: "contacts", label: "Контакты" },
 ];
 
+const IMAGES_2026 = {
+  superman: "https://cdn.poehali.dev/projects/27a64614-09b7-484f-8fe9-15c0996d1407/files/8fe305d0-7ff6-4d10-97d9-4876b6bf372c.jpg",
+  avengers: "https://cdn.poehali.dev/projects/27a64614-09b7-484f-8fe9-15c0996d1407/files/8ba9c609-4ee1-4541-a99b-a3cd70bc0def.jpg",
+  mission: "https://cdn.poehali.dev/projects/27a64614-09b7-484f-8fe9-15c0996d1407/files/d33a3b32-30e0-4713-b7f0-99be28533ed0.jpg",
+  jurassic: "https://cdn.poehali.dev/projects/27a64614-09b7-484f-8fe9-15c0996d1407/files/ef7bdf27-210c-48e7-9ba9-f53079b5c3de.jpg",
+  minecraft: "https://cdn.poehali.dev/projects/27a64614-09b7-484f-8fe9-15c0996d1407/files/9368b2e9-a0b5-4d0b-a63f-25bd8780d9f5.jpg",
+  sinners: "https://cdn.poehali.dev/projects/27a64614-09b7-484f-8fe9-15c0996d1407/files/9abffe5f-42f1-49ca-b9b3-4f8795b1dd2a.jpg",
+};
+
 export const TRAILERS: TrailerItem[] = [
+  // 2025–2026 — реальные трейлеры
+  {
+    id: 10, title: "Супермен", genre: "Супергерои", year: 2025,
+    youtubeId: "qpQ7BWSwhUw",
+    image: IMAGES_2026.superman, duration: "2:31", type: "Фильм", isNew: true,
+    description: "Официальный трейлер. Новый Кларк Кент от Джеймса Ганна. Выход: июль 2025.",
+  },
+  {
+    id: 11, title: "Мстители: Судный день", genre: "Супергерои", year: 2026,
+    youtubeId: "6ZfuNTqbHE8",
+    image: IMAGES_2026.avengers, duration: "2:05", type: "Фильм", isNew: true,
+    description: "Тизер-трейлер. Доктор Дум против всей вселенной Marvel. Выход: май 2026.",
+  },
+  {
+    id: 12, title: "Миссия невыполнима: Финальный расчёт", genre: "Боевик", year: 2025,
+    youtubeId: "fsQgc9pCyDU",
+    image: IMAGES_2026.mission, duration: "3:15", type: "Фильм", isNew: true,
+    description: "Финальный трейлер. Том Круз в последнем деле Итана Ханта. Выход: май 2025.",
+  },
+  {
+    id: 13, title: "Мир Юрского периода: Возрождение", genre: "Приключения", year: 2025,
+    youtubeId: "aBHRBUHMM_E",
+    image: IMAGES_2026.jurassic, duration: "2:44", type: "Фильм", isNew: true,
+    description: "Официальный трейлер. Динозавры возвращаются. Новая история, новые персонажи.",
+  },
+  {
+    id: 14, title: "Minecraft: Фильм", genre: "Приключения", year: 2025,
+    youtubeId: "hbSCXEFiGpY",
+    image: IMAGES_2026.minecraft, duration: "2:22", type: "Фильм", isNew: true,
+    description: "Официальный трейлер. Джек Блэк в роли Свина. Кубический мир на большом экране.",
+  },
+  {
+    id: 15, title: "Грешники", genre: "Ужасы", year: 2025,
+    youtubeId: "FN1fSMV5k4A",
+    image: IMAGES_2026.sinners, duration: "2:18", type: "Фильм", isNew: true,
+    description: "Официальный трейлер. Вампирский хоррор от Райана Куглера с Майклом Б. Джорданом.",
+  },
+  // Старые
   {
     id: 1, title: "Тень Токио", genre: "Триллер", year: 2024,
     youtubeId: "YoHD9XEInc0",
