@@ -37,9 +37,49 @@ const NAV_ITEMS = [
   { id: "home", label: "Главная" },
   { id: "films", label: "Топ фильмов" },
   { id: "series", label: "Топ сериалов" },
+  { id: "trailers", label: "Трейлеры" },
   { id: "genres", label: "По жанрам" },
   { id: "about", label: "О проекте" },
   { id: "contacts", label: "Контакты" },
+];
+
+const TRAILERS = [
+  {
+    id: 1, title: "Тень Токио", genre: "Триллер", year: 2024,
+    youtubeId: "YoHD9XEInc0",
+    image: IMAGES.noir, duration: "2:34", type: "Фильм",
+    description: "Официальный трейлер. Детектив против ночного мегаполиса.",
+  },
+  {
+    id: 2, title: "Хроники Тьмы", genre: "Фэнтези", year: 2023,
+    youtubeId: "sGbxmsDFVnE",
+    image: IMAGES.fantasy, duration: "3:12", type: "Фильм",
+    description: "Эпический трейлер. Последний страж против тёмного бога.",
+  },
+  {
+    id: 3, title: "Горизонт событий", genre: "Sci-Fi", year: 2024,
+    youtubeId: "2LqzF5WauAw",
+    image: IMAGES.scifi, duration: "2:48", type: "Фильм",
+    description: "Тизер-трейлер. На краю чёрной дыры.",
+  },
+  {
+    id: 4, title: "Пять семей", genre: "Криминал", year: 2023,
+    youtubeId: "ioR5np1fmEc",
+    image: IMAGES.crime, duration: "2:21", type: "Фильм",
+    description: "Финальный трейлер. Война кланов.",
+  },
+  {
+    id: 5, title: "Ночной патруль", genre: "Детектив", year: 2024,
+    youtubeId: "YoHD9XEInc0",
+    image: IMAGES.noir, duration: "1:55", type: "Сериал",
+    description: "Трейлер 2 сезона. Ночные тайны.",
+  },
+  {
+    id: 6, title: "Последний рубеж", genre: "Sci-Fi", year: 2024,
+    youtubeId: "2LqzF5WauAw",
+    image: IMAGES.scifi, duration: "2:07", type: "Сериал",
+    description: "Трейлер 3 сезона. Конец известной вселенной.",
+  },
 ];
 
 function StarRating({ rating }: { rating: number }) {
@@ -197,11 +237,25 @@ function FilmStrip() {
   );
 }
 
+interface TrailerItem {
+  id: number;
+  title: string;
+  genre: string;
+  year: number;
+  youtubeId: string;
+  image: string;
+  duration: string;
+  type: string;
+  description: string;
+}
+
 export default function Index() {
   const [activeSection, setActiveSection] = useState("home");
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
+  const [activeTrailer, setActiveTrailer] = useState<TrailerItem | null>(null);
+  const [trailerFilter, setTrailerFilter] = useState("Все");
 
   const scrollToSection = (id: string) => {
     setActiveSection(id);
@@ -372,6 +426,136 @@ export default function Index() {
       </section>
 
       <FilmStrip />
+
+      {/* TRAILERS */}
+      <section id="trailers" style={{ padding: "96px 16px", background: "rgba(0,0,0,0.5)" }}>
+        <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
+          <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: "48px", flexWrap: "wrap", gap: "16px" }}>
+            <div>
+              <p style={{ color: "#D4AF37", fontSize: "12px", letterSpacing: "4px", textTransform: "uppercase", marginBottom: "6px" }}>Смотреть</p>
+              <h2 style={{ fontFamily: "Oswald, sans-serif", fontSize: "clamp(36px, 5vw, 52px)", color: "#fff" }}>
+                <span style={{ color: "#D4AF37" }}>Трейлеры</span>
+              </h2>
+            </div>
+            <div style={{ display: "flex", gap: "8px" }}>
+              {["Все", "Фильм", "Сериал"].map(filter => (
+                <button
+                  key={filter}
+                  onClick={() => setTrailerFilter(filter)}
+                  style={{
+                    padding: "8px 18px", borderRadius: "8px", fontSize: "13px", cursor: "pointer", transition: "all 0.2s", border: "none",
+                    background: trailerFilter === filter ? "#D4AF37" : "rgba(255,255,255,0.06)",
+                    color: trailerFilter === filter ? "#000" : "rgba(255,255,255,0.6)",
+                    fontFamily: "'Golos Text', sans-serif", fontWeight: trailerFilter === filter ? "600" : "400",
+                  }}
+                >
+                  {filter}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "20px" }}>
+            {TRAILERS.filter(t => trailerFilter === "Все" || t.type === trailerFilter).map((trailer, i) => (
+              <div
+                key={trailer.id}
+                className="animate-fade-in"
+                style={{ animationDelay: `${i * 0.08}s`, cursor: "pointer", borderRadius: "14px", overflow: "hidden", background: "#0f0f0f", border: "1px solid rgba(255,255,255,0.07)", transition: "all 0.3s" }}
+                onClick={() => setActiveTrailer(trailer)}
+              >
+                {/* Thumbnail */}
+                <div style={{ position: "relative", aspectRatio: "16/9", overflow: "hidden" }}>
+                  <img
+                    src={trailer.image}
+                    alt={trailer.title}
+                    style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.4s", display: "block" }}
+                    onMouseEnter={e => (e.currentTarget.style.transform = "scale(1.05)")}
+                    onMouseLeave={e => (e.currentTarget.style.transform = "scale(1)")}
+                  />
+                  {/* Dark overlay */}
+                  <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.35)" }} />
+                  {/* Play button */}
+                  <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <div style={{
+                      width: "56px", height: "56px", borderRadius: "50%",
+                      background: "rgba(212,175,55,0.95)", display: "flex", alignItems: "center", justifyContent: "center",
+                      boxShadow: "0 0 0 8px rgba(212,175,55,0.15), 0 0 40px rgba(212,175,55,0.3)",
+                      transition: "all 0.2s",
+                    }}>
+                      <Icon name="Play" size={22} style={{ color: "#000", marginLeft: "3px" }} />
+                    </div>
+                  </div>
+                  {/* Duration badge */}
+                  <div style={{ position: "absolute", bottom: "10px", right: "10px", background: "rgba(0,0,0,0.8)", borderRadius: "6px", padding: "3px 8px", backdropFilter: "blur(6px)" }}>
+                    <span style={{ color: "#fff", fontSize: "12px", fontWeight: "600" }}>{trailer.duration}</span>
+                  </div>
+                  {/* Type badge */}
+                  <div style={{ position: "absolute", top: "10px", left: "10px", background: trailer.type === "Сериал" ? "rgba(41,128,185,0.9)" : "rgba(192,57,43,0.9)", borderRadius: "6px", padding: "3px 8px" }}>
+                    <span style={{ color: "#fff", fontSize: "11px", fontWeight: "600" }}>{trailer.type}</span>
+                  </div>
+                </div>
+                {/* Info */}
+                <div style={{ padding: "16px" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "8px" }}>
+                    <div>
+                      <h3 style={{ fontFamily: "Oswald, sans-serif", fontSize: "18px", color: "#fff", marginBottom: "4px" }}>{trailer.title}</h3>
+                      <p style={{ color: "rgba(255,255,255,0.4)", fontSize: "13px" }}>{trailer.genre} · {trailer.year}</p>
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: "4px", background: "rgba(212,175,55,0.1)", border: "1px solid rgba(212,175,55,0.2)", borderRadius: "6px", padding: "4px 8px", flexShrink: 0 }}>
+                      <Icon name="Play" size={10} style={{ color: "#D4AF37" }} />
+                      <span style={{ color: "#D4AF37", fontSize: "11px", fontWeight: "600" }}>HD</span>
+                    </div>
+                  </div>
+                  <p style={{ color: "rgba(255,255,255,0.35)", fontSize: "12px", marginTop: "8px", lineHeight: 1.5 }}>{trailer.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* TRAILER MODAL */}
+      {activeTrailer && (
+        <div
+          style={{ position: "fixed", inset: 0, zIndex: 100, background: "rgba(0,0,0,0.92)", display: "flex", alignItems: "center", justifyContent: "center", padding: "16px", backdropFilter: "blur(10px)" }}
+          onClick={() => setActiveTrailer(null)}
+        >
+          <div
+            className="animate-scale-in"
+            style={{ width: "100%", maxWidth: "900px", borderRadius: "18px", overflow: "hidden", background: "#0d0d0d", border: "1px solid rgba(212,175,55,0.2)", boxShadow: "0 0 80px rgba(212,175,55,0.1)" }}
+            onClick={e => e.stopPropagation()}
+          >
+            {/* Modal header */}
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 20px", borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
+              <div>
+                <h3 style={{ fontFamily: "Oswald, sans-serif", fontSize: "20px", color: "#D4AF37" }}>{activeTrailer.title}</h3>
+                <p style={{ color: "rgba(255,255,255,0.4)", fontSize: "13px" }}>{activeTrailer.genre} · {activeTrailer.year} · {activeTrailer.type}</p>
+              </div>
+              <button
+                onClick={() => setActiveTrailer(null)}
+                style={{ background: "rgba(255,255,255,0.08)", border: "none", borderRadius: "8px", width: "36px", height: "36px", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "rgba(255,255,255,0.7)", transition: "all 0.2s" }}
+              >
+                <Icon name="X" size={18} />
+              </button>
+            </div>
+            {/* Video embed */}
+            <div style={{ position: "relative", aspectRatio: "16/9", background: "#000" }}>
+              <iframe
+                src={`https://www.youtube.com/embed/${activeTrailer.youtubeId}?autoplay=1&rel=0`}
+                style={{ width: "100%", height: "100%", border: "none", display: "block" }}
+                allow="autoplay; encrypted-media; fullscreen"
+                allowFullScreen
+                title={activeTrailer.title}
+              />
+            </div>
+            {/* Modal footer */}
+            <div style={{ padding: "14px 20px", display: "flex", alignItems: "center", gap: "8px" }}>
+              <Icon name="Info" size={14} style={{ color: "rgba(255,255,255,0.3)", flexShrink: 0 }} />
+              <p style={{ color: "rgba(255,255,255,0.35)", fontSize: "13px" }}>{activeTrailer.description}</p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* GENRES */}
       <section id="genres" style={{ padding: "96px 16px", background: "rgba(0,0,0,0.4)" }}>
